@@ -9,13 +9,14 @@ env:
 jobs:
   Snyk_Check:
     runs-on: ubuntu-latest
+    needs: [Build]
     steps:
       - name: Clone down repository
-        uses: actions/chekcout@v4
-        #with:
-        #  name: code
-        #  path: .
-        #  include-hidden-files: true
+        uses: actions/download-artifact@v4
+        with:
+          name: code
+          path: .
+          include-hidden-files: true
       - name: Snyk Install
         run: |
              curl --compressed https://downloads.snyk.io/cli/stable/snyk-linux -o snyk
@@ -25,8 +26,8 @@ jobs:
         run: snyk out ${{ secrets.SNYKAPIKEY }}
       - name: Snyk test
         run: snyk test --all-projects | true
-        # with:
-        #  name: code
+        #with:
+        #   name: code
         #  path: .
   Build:
     runs-on: ubuntu-latest
