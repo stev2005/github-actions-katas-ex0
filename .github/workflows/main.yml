@@ -4,7 +4,30 @@ env:
   github_username: ${{ github.actor }}
   github_password: ${{ secrets.GITHUB_TOKEN }}
   GIT_COMMIT: ${{ github.sha }}
+  snyk_API: ${{ secrets.SNYKAPIKEY }}
+  
 jobs:
+  Snyk_Check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone down repository
+        uses: actions/chekcout@v4
+        #with:
+        #  name: code
+        #  path: .
+        #  include-hidden-files: true
+      - name: Snyk Install
+        run: |
+             curl --compressed https://downloads.snyk.io/cli/stable/snyk-linux -o snyk
+             chmod +x ./snyk
+             mv ./snyk /usr/local/bin/
+      - name: Snyk out
+        run: snyk out ${{ secrets.SNYKAPIKEY }}
+      - name: Snyk test
+        run: snyk test --o-projects
+        with:
+          name: code
+          path: .
   Build:
     runs-on: ubuntu-latest
     container: gradle:6-jdk11
