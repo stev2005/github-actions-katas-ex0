@@ -4,7 +4,7 @@ on: [workflow_dispatch]
 
 jobs:
   call-reusable:
-    uses: ./.github/workflow/reusable.yml
+    uses: ./.github/workflow/reusable.yml@${{ github.sha }}
     with:
       numbers: '[5, 15, 25, 35, 45]'
   
